@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import model.Recipe;
+import model.RecipeIngredient;
 
 /** Binds the list of suggested recipes to item_recipe.xml rows. */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
