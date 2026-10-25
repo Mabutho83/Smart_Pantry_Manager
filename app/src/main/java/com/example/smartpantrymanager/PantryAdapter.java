@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PantryItem item = items.get(position);
+        Context ctx = holder.itemView.getContext();
         holder.tvName.setText(item.getName());
         holder.tvQty.setText(Units.format(item.getQuantity()) + " " + item.getUnit());
 
@@ -59,10 +62,10 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
             holder.tvExpiry.setVisibility(View.VISIBLE);
             if (highlightExpiring && item.isExpiringSoon(3)) {
                 holder.tvExpiry.setText("Expires: " + item.getExpiry() + "  (expiring soon!)");
-                holder.tvExpiry.setTextColor(Color.RED);
+                holder.tvExpiry.setTextColor(ContextCompat.getColor(ctx, R.color.danger));
             } else {
                 holder.tvExpiry.setText("Expires: " + item.getExpiry());
-                holder.tvExpiry.setTextColor(Color.GRAY);
+                holder.tvExpiry.setTextColor(ContextCompat.getColor(ctx, R.color.text_secondary));
             }
         }
 
