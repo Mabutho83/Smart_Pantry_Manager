@@ -1,24 +1,38 @@
 package com.example.smartpantrymanager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.SwitchCompat;
 
+/** Settings screen: toggle for highlighting items that are expiring soon on the pantry list. */
 public class SettingsActivity extends AppCompatActivity {
+
+    public static final String PREFS = "smart_pantry_prefs";
+    public static final String KEY_ALERTS = "expiry_alerts";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_settings2);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.activity_settings);
+        setTitle("Settings");
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        SwitchCompat switchAlerts = findViewById(R.id.switchAlerts);
+        switchAlerts.setChecked(prefs.getBoolean(KEY_ALERTS, true));
+        switchAlerts.setOnCheckedChangeListener((button, checked) ->
+                prefs.edit().putBoolean(KEY_ALERTS, checked).apply());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
