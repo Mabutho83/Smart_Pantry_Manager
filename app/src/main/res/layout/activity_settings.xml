@@ -9,14 +9,14 @@
         android:id="@+id/switchAlerts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Expiring-soon alerts"
+        android:text="@string/expiry"
         android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="When on, pantry items that expire within 3 days (or already have) are highlighted in red."
+        android:text="@string/highlight_red"
         android:textColor="#666666"
         android:textSize="13sp" />
 </LinearLayout>

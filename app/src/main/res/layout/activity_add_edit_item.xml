@@ -13,7 +13,7 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ingredient name (e.g. tomatoes)"
+            android:hint="@string/ingredient_name"
             android:inputType="textCapWords" />
 
         <EditText
@@ -21,14 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Quantity"
+            android:hint="@string/quantity"
             android:inputType="numberDecimal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Unit" />
+            android:text="@string/unit" />
 
         <Spinner
             android:id="@+id/spUnit"
@@ -49,7 +49,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="Expiry date (optional)"
+                android:hint="@string/expiry_date_optional"
                 android:inputType="none" />
 
             <Button
@@ -57,7 +57,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear" />
+                android:text="@string/clear" />
         </LinearLayout>
 
         <Button
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Save" />
+            android:text="@string/save" />
 
         <Button
             android:id="@+id/btnDelete"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="#C62828"
-            android:text="Delete"
+            android:text="@string/delete"
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
