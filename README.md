@@ -6,7 +6,7 @@ trip required. A recipe is never suggested unless the pantry contains everything
 
 Built for the *Mobile App Development 700* practical assignment.
 
-- **Author:** _Your name / student number_
+- **Author:** Mabutho Mthethwa
 - **Language:** Java (no Kotlin)
 - **Database:** SQLite (`SQLiteOpenHelper`)
 - **Min SDK:** 24 (Android 7.0)
