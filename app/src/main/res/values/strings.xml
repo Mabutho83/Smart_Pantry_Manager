@@ -8,7 +8,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="empty_pantry">Your pantry is empty.\nTap + to add your first ingredient.</string>
-    <string name="add_ingredient">Add ingredient</string>
+    <string name="add_ingredient">Tap to Add ingredient</string>
     <string name="ingredients"></string>
     <string name="method">Method</string>
     <string name="expiry">Expiring-soon alerts</string>
