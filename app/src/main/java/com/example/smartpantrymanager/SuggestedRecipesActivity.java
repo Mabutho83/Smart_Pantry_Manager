@@ -2,7 +2,6 @@ package com.example.smartpantrymanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartpantrymanager.RecipeDetailActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.List;
 import model.*;
@@ -22,8 +21,10 @@ public class SuggestedRecipesActivity extends AppCompatActivity implements Recip
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggested_recipes);
-        setTitle("Suggested Recipes");
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Suggested Recipes");
 
         DatabaseHelper db = new DatabaseHelper(this);
         List<PantryItem> pantry = db.getAllPantryItems();
@@ -36,8 +37,15 @@ public class SuggestedRecipesActivity extends AppCompatActivity implements Recip
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(new RecipeAdapter(matches, this));
 
-        TextView tvEmpty = findViewById(R.id.tvNoRecipes);
-        tvEmpty.setVisibility(matches.isEmpty() ? View.VISIBLE : View.GONE);
+        boolean empty = matches.isEmpty();
+        findViewById(R.id.tvNoRecipes).setVisibility(empty ? View.VISIBLE : View.GONE);
+
+        TextView tvCount = findViewById(R.id.tvRecipeCount);
+        tvCount.setVisibility(empty ? View.GONE : View.VISIBLE);
+        int n = matches.size();
+        tvCount.setText(n + (n == 1 ? " recipe you can cook right now" : " recipes you can cook right now"));
+
+        BottomNavHelper.setup(this, R.id.nav_recipes);
     }
 
     @Override
@@ -45,14 +53,5 @@ public class SuggestedRecipesActivity extends AppCompatActivity implements Recip
         Intent intent = new Intent(this, RecipeDetailActivity.class);
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

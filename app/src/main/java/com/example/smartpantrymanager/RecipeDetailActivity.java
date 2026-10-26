@@ -5,9 +5,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import model.Recipe;
-import model.RecipeIngredient;
 
+import com.google.android.material.appbar.MaterialToolbar;
+import model.*;
 /** Recipe Detail screen: full ingredient list and method for the recipe passed in via Intent. */
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -17,8 +17,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-        setTitle("Recipe");
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Recipe");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         long id = getIntent().getLongExtra(EXTRA_RECIPE_ID, -1);
         Recipe recipe = new DatabaseHelper(this).getRecipe(id);
@@ -45,6 +48,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
             method.append(i + 1).append(". ").append(steps[i]).append("\n\n");
         }
         ((TextView) findViewById(R.id.tvDetailSteps)).setText(method.toString().trim());
+
+        ((TextView) findViewById(R.id.tvDetailMeta)).setText(
+                recipe.getIngredients().size() + " ingredients \u00B7 " + steps.length + " steps");
     }
 
     @Override

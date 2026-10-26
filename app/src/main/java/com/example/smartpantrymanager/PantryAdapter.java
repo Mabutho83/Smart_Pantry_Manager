@@ -1,6 +1,7 @@
 package com.example.smartpantrymanager;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import model.PantryItem;
-
+import java.util.Locale;
 
 /** Binds the list of pantry items to item_pantry.xml rows. */
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder> {
@@ -48,8 +48,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Context ctx = holder.itemView.getContext();
         PantryItem item = items.get(position);
-        holder.tvName.setText(item.getName());
+
+        String name = item.getName();
+        holder.tvInitial.setText(name.isEmpty() ? "?" : name.substring(0, 1).toUpperCase(Locale.getDefault()));
+        holder.tvName.setText(name);
         holder.tvQty.setText(Units.format(item.getQuantity()) + " " + item.getUnit());
 
         boolean hasExpiry = item.getExpiry() != null && !item.getExpiry().isEmpty();
@@ -57,13 +61,11 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
             holder.tvExpiry.setVisibility(View.GONE);
         } else {
             holder.tvExpiry.setVisibility(View.VISIBLE);
-            if (highlightExpiring && item.isExpiringSoon(3)) {
-                holder.tvExpiry.setText("Expires: " + item.getExpiry() + "  (expiring soon!)");
-                holder.tvExpiry.setTextColor(Color.RED);
-            } else {
-                holder.tvExpiry.setText("Expires: " + item.getExpiry());
-                holder.tvExpiry.setTextColor(Color.GRAY);
-            }
+            boolean soon = highlightExpiring && item.isExpiringSoon(3);
+            int colour = ContextCompat.getColor(ctx, soon ? R.color.sp_danger : R.color.sp_text_secondary);
+            holder.tvExpiry.setText(soon ? "Use soon \u00B7 " + item.getExpiry() : "Expires " + item.getExpiry());
+            holder.tvExpiry.setTextColor(colour);
+            holder.tvExpiry.setCompoundDrawableTintList(ColorStateList.valueOf(colour));
         }
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
@@ -76,11 +78,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvQty, tvExpiry;
+        TextView tvInitial, tvName, tvQty, tvExpiry;
         ImageButton btnDelete;
 
         ViewHolder(View v) {
             super(v);
+            tvInitial = v.findViewById(R.id.tvItemInitial);
             tvName = v.findViewById(R.id.tvItemName);
             tvQty = v.findViewById(R.id.tvItemQuantity);
             tvExpiry = v.findViewById(R.id.tvItemExpiry);

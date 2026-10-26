@@ -1,19 +1,21 @@
-package com.example.smartpantrymanager;
+package com.example.smartpantry;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Arrays;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.Calendar;
 import java.util.Locale;
 import model.*;
@@ -24,26 +26,34 @@ public class AddEditItemActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM_ID = "item_id";
 
     private DatabaseHelper db;
+    private TextInputLayout tilName, tilQuantity;
     private EditText etName, etQuantity, etExpiry;
-    private Spinner spUnit;
+    private MaterialAutoCompleteTextView acUnit;
     private long itemId = -1; // -1 means "adding a new item"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_item);
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         db = new DatabaseHelper(this);
+        tilName = findViewById(R.id.tilName);
+        tilQuantity = findViewById(R.id.tilQuantity);
         etName = findViewById(R.id.etName);
         etQuantity = findViewById(R.id.etQuantity);
         etExpiry = findViewById(R.id.etExpiry);
-        spUnit = findViewById(R.id.spUnit);
-        Button btnSave = findViewById(R.id.btnSave);
-        Button btnDelete = findViewById(R.id.btnDelete);
-        Button btnClearDate = findViewById(R.id.btnClearDate);
+        acUnit = findViewById(R.id.acUnit);
+        MaterialButton btnSave = findViewById(R.id.btnSave);
+        MaterialButton btnDelete = findViewById(R.id.btnDelete);
+        MaterialButton btnClearDate = findViewById(R.id.btnClearDate);
 
-        spUnit.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Units.ALL));
+        // Unit dropdown (defaults to the first unit)
+        acUnit.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, Units.ALL));
+        acUnit.setText(Units.ALL[0], false);
 
         etExpiry.setOnClickListener(v -> showDatePicker());
         btnClearDate.setOnClickListener(v -> etExpiry.setText(""));
@@ -52,17 +62,17 @@ public class AddEditItemActivity extends AppCompatActivity {
 
         itemId = getIntent().getLongExtra(EXTRA_ITEM_ID, -1);
         if (itemId != -1) {
-            setTitle("Edit Ingredient");
+            getSupportActionBar().setTitle("Edit Ingredient");
             btnDelete.setVisibility(View.VISIBLE);
             PantryItem item = db.getPantryItem(itemId);
             if (item != null) {
                 etName.setText(item.getName());
                 etQuantity.setText(Units.format(item.getQuantity()));
-                spUnit.setSelection(Arrays.asList(Units.ALL).indexOf(item.getUnit()));
+                acUnit.setText(item.getUnit(), false);
                 etExpiry.setText(item.getExpiry());
             }
         } else {
-            setTitle("Add Ingredient");
+            getSupportActionBar().setTitle("Add Ingredient");
         }
     }
 
@@ -77,25 +87,28 @@ public class AddEditItemActivity extends AppCompatActivity {
     private void saveItem() {
         String name = etName.getText().toString().trim();
         String qtyText = etQuantity.getText().toString().trim();
+        tilName.setError(null);
+        tilQuantity.setError(null);
 
         // Input validation
         if (name.isEmpty()) {
-            etName.setError("Ingredient name is required");
+            tilName.setError("Ingredient name is required");
             return;
         }
         double qty;
         try {
             qty = Double.parseDouble(qtyText);
         } catch (NumberFormatException e) {
-            etQuantity.setError("Enter a valid number");
+            tilQuantity.setError("Enter a valid number");
             return;
         }
         if (qty <= 0) {
-            etQuantity.setError("Quantity must be greater than 0");
+            tilQuantity.setError("Must be greater than 0");
             return;
         }
 
-        String unit = spUnit.getSelectedItem().toString();
+        String unit = acUnit.getText().toString().trim();
+        if (unit.isEmpty()) unit = Units.ALL[0];
         String expiry = etExpiry.getText().toString().trim();
         if (expiry.isEmpty()) expiry = null; // expiry is optional
 
@@ -110,7 +123,7 @@ public class AddEditItemActivity extends AppCompatActivity {
     }
 
     private void confirmDelete() {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle("Delete ingredient")
                 .setMessage("Delete this ingredient from your pantry?")
                 .setPositiveButton("Delete", (dialog, which) -> {
