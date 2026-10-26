@@ -9,7 +9,7 @@
     <string name="delete">Delete</string>
     <string name="empty_pantry">Your pantry is empty.\nTap + to add your first ingredient.</string>
     <string name="add_ingredient">Tap to Add ingredient</string>
-    <string name="ingredients"></string>
+    <string name="ingredients">Add Ingredients</string>
     <string name="method">Method</string>
     <string name="expiry">Expiring-soon alerts</string>
     <string name="highlight_red">When on, pantry items that expire within 3 days (or already have) are highlighted in red.</string>

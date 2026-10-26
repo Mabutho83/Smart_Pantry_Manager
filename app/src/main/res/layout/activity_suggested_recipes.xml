@@ -53,7 +53,7 @@
                 android:alpha="0.35"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_restaurant"
-                android:tint="@color/sp_primary" />
+                app:tint="@color/sp_primary" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -40,7 +40,7 @@
                         android:layout_gravity="center"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_notifications"
-                        android:tint="@color/sp_on_primary_container" />
+                        app:tint="@color/sp_on_primary_container" />
                 </FrameLayout>
 
                 <LinearLayout

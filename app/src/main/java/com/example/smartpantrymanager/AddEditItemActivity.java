@@ -1,4 +1,4 @@
-package com.example.smartpantry;
+package com.example.smartpantrymanager;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;

@@ -33,7 +33,7 @@
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_restaurant"
-                android:tint="@color/sp_on_primary_container" />
+                app:tint="@color/sp_on_primary_container" />
         </FrameLayout>
 
         <LinearLayout
@@ -80,6 +80,6 @@
             android:layout_height="24dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_chevron_right"
-            android:tint="@color/sp_text_secondary" />
+            app:tint="@color/sp_text_secondary" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
