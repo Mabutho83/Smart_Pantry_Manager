@@ -2,48 +2,54 @@ package com.example.smartpantrymanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 import model.PantryItem;
-
 
 /** Pantry List screen: shows every ingredient and lets the user add, edit or delete them. */
 public class MainActivity extends AppCompatActivity implements PantryAdapter.Listener {
 
     private DatabaseHelper db;
     private PantryAdapter adapter;
-    private TextView tvEmpty;
+    private View emptyState, summaryCard;
+    private TextView tvSummaryTitle, tvSummarySub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("My Pantry");
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("My Pantry");
 
         db = new DatabaseHelper(this);
-        tvEmpty = findViewById(R.id.tvEmpty);
+        emptyState = findViewById(R.id.tvEmpty);
+        summaryCard = findViewById(R.id.summaryCard);
+        tvSummaryTitle = findViewById(R.id.tvSummaryTitle);
+        tvSummarySub = findViewById(R.id.tvSummarySub);
 
         RecyclerView recycler = findViewById(R.id.recyclerPantry);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PantryAdapter(this);
         recycler.setAdapter(adapter);
 
-        FloatingActionButton fab = findViewById(R.id.fabAdd);
+        View fab = findViewById(R.id.fabAdd);
         fab.setOnClickListener(v -> startActivity(new Intent(this, AddEditItemActivity.class)));
+
+        BottomNavHelper.setup(this, R.id.nav_pantry);
     }
 
-    // Reload whenever we come back from the add/edit or settings screens.
+    // Reload whenever we come back from the add/edit or other screens.
     @Override
     protected void onResume() {
         super.onResume();
@@ -55,7 +61,19 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.Lis
         boolean alerts = getSharedPreferences(SettingsActivity.PREFS, MODE_PRIVATE)
                 .getBoolean(SettingsActivity.KEY_ALERTS, true);
         adapter.setData(items, alerts);
-        tvEmpty.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
+
+        boolean empty = items.isEmpty();
+        emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
+        summaryCard.setVisibility(empty ? View.GONE : View.VISIBLE);
+
+        if (!empty) {
+            int ready = RecipeMatcher.findStrictMatches(items, db.getAllRecipes()).size();
+            int n = items.size();
+            tvSummaryTitle.setText(n + (n == 1 ? " ingredient" : " ingredients") + " in your pantry");
+            tvSummarySub.setText(ready == 0
+                    ? "No recipes ready yet"
+                    : ready + (ready == 1 ? " recipe" : " recipes") + " ready to cook");
+        }
     }
 
     @Override
@@ -67,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.Lis
 
     @Override
     public void onDeleteClick(PantryItem item) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle("Delete ingredient")
                 .setMessage("Delete " + item.getName() + " from your pantry?")
                 .setPositiveButton("Delete", (dialog, which) -> {
@@ -76,24 +94,5 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.Lis
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        if (id == R.id.action_suggested) {
-            startActivity(new Intent(this, SuggestedRecipesActivity.class));
-            return true;
-        } else if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(menuItem);
     }
 }

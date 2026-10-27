@@ -8,10 +8,17 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="empty_pantry">Your pantry is empty.\nTap + to add your first ingredient.</string>
-    <string name="add_ingredient">Add ingredient</string>
-    <string name="ingredients"></string>
+    <string name="add_ingredient">Tap to Add ingredient</string>
+    <string name="ingredients">Add Ingredients</string>
     <string name="method">Method</string>
     <string name="expiry">Expiring-soon alerts</string>
     <string name="highlight_red">When on, pantry items that expire within 3 days (or already have) are highlighted in red.</string>
     <string name="no_recipes">No recipes match your pantry yet - add more ingredients.</string>
+    <string name="about">About</string>
+    <string name="desc">Smart Pantry Manager\nSuggests only the recipes you can cook with what you already have at home.</string>
+    <string name="addMore">Add more ingredients to unlock recipes.</string>
+    <string name="delete_ingredient">Delete ingredient</string>
+
+
+
 </resources>

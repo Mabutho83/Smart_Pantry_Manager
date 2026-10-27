@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sp_primary">#2E7D32</color>
+    <color name="sp_primary_dark">#1B5E20</color>
+    <color name="sp_primary_container">#D7ECD9</color>
+    <color name="sp_on_primary_container">#17441A</color>
+    <color name="sp_accent">#F57C00</color>
+    <color name="sp_background">#F6F4EC</color>
+    <color name="sp_text">#1F2A21</color>
+    <color name="sp_text_secondary">#5F6B62</color>
+    <color name="sp_danger">#C62828</color>
+</resources>

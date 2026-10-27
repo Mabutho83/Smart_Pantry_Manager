@@ -9,9 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
-import model.Recipe;
-import model.RecipeIngredient;
+import model.*;
 
 /** Binds the list of suggested recipes to item_recipe.xml rows. */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
@@ -40,6 +38,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         Recipe recipe = recipes.get(position);
         holder.tvName.setText(recipe.getName());
 
+        int count = recipe.getIngredients().size();
+        holder.tvMeta.setText(count + (count == 1 ? " ingredient" : " ingredients"));
+
         StringBuilder sb = new StringBuilder();
         for (RecipeIngredient ing : recipe.getIngredients()) {
             if (sb.length() > 0) sb.append(", ");
@@ -56,11 +57,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvIngredients;
+        TextView tvName, tvMeta, tvIngredients;
 
         ViewHolder(View v) {
             super(v);
             tvName = v.findViewById(R.id.tvRecipeName);
+            tvMeta = v.findViewById(R.id.tvRecipeMeta);
             tvIngredients = v.findViewById(R.id.tvRecipeIngredients);
         }
     }
